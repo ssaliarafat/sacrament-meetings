@@ -1,26 +1,61 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #172033;
+  --primary: #047857;
+  --muted: #64748b;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+.agenda-heading {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+  color: #065f46;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.agenda-text {
+  margin-top: 0.5rem;
+  color: #475569;
+}
+
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  header,
+  footer,
+  .print-hidden,
+  button {
+    display: none !important;
+  }
+
+  .meeting-program {
+    max-width: 100%;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  .agenda-heading {
+    color: black;
+  }
 }
