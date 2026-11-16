@@ -1,7 +1,6 @@
 
-"use client";
-
 import type { SacramentMeeting } from "@/lib/types";
+import PrintButton from "@/components/PrintButton";
 
 interface MeetingDetailProps {
   meeting: SacramentMeeting;
@@ -135,15 +134,9 @@ export default function MeetingDetail({ meeting }: MeetingDetailProps) {
         </section>
       </div>
 
-      <div className="mt-10 text-center print:hidden">
-        <button
-          type="button"
-          onClick={() => window.print()}
-          className="rounded-lg bg-emerald-700 px-6 py-3 font-semibold text-white hover:bg-emerald-800"
-        >
-          Print Meeting Program
-        </button>
-      </div>
+  <div className="mt-10 text-center print:hidden">
+  <PrintButton />
+</div>
     </article>
   );
 }
