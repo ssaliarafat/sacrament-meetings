@@ -1,14 +1,12 @@
 
+import { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { connection } from "next/server";
 import MeetingCard from "@/components/MeetingCard";
 import { getMeetingsPage, isDatabaseConfigured } from "@/lib/meetings-db";
 
-export default async function HomePage() {
-  const latestMeeting = isDatabaseConfigured()
-    ? (await getMeetingsPage({ page: 1, limit: 1 })).meetings[0]
-    : undefined;
-
+export default function HomePage() {
   return (
     <div className="space-y-12">
       <section className="grid items-center gap-8 overflow-hidden rounded-3xl bg-white p-8 shadow-sm md:grid-cols-2 md:p-12">
@@ -68,15 +66,41 @@ export default async function HomePage() {
             View all meetings →
           </Link>
         </div>
-
-        {latestMeeting ? (
-          <MeetingCard meeting={latestMeeting} />
-        ) : (
-          <p className="rounded-xl bg-white p-8 text-center text-slate-600">
-            No meeting programs are available.
-          </p>
-        )}
+        <Suspense
+          fallback={
+            <p
+              role="status"
+              aria-live="polite"
+              className="rounded-xl bg-white p-8 text-center text-slate-600"
+            >
+              Loading the latest meeting...
+            </p>
+          }
+        >
+          <LatestMeeting />
+        </Suspense>
       </section>
     </div>
+  );
+}
+
+async function LatestMeeting() {
+  if (!isDatabaseConfigured()) {
+    return (
+      <p className="rounded-xl bg-white p-8 text-center text-slate-600">
+        No meeting programs are available.
+      </p>
+    );
+  }
+
+  await connection();
+  const latestMeeting = (await getMeetingsPage({ page: 1, limit: 1 })).meetings[0];
+
+  return latestMeeting ? (
+    <MeetingCard meeting={latestMeeting} />
+  ) : (
+    <p className="rounded-xl bg-white p-8 text-center text-slate-600">
+      No meeting programs are available.
+    </p>
   );
 }
