@@ -3,7 +3,8 @@ export type MeetingType =
   | "testimony"
   | "regular"
   | "stake"
-  | "general";
+  | "general"
+  | "special";
 
 export interface Hymn {
   number: number;
@@ -26,7 +27,7 @@ export interface SacramentMeeting {
   meetingType: MeetingType;
   presiding: string;
   conducting: string;
-  announcements?: string[];
+  announcements: string[];
   openingHymn: Hymn;
   openingPrayer: string;
   wardBusiness: WardBusinessItem[];
@@ -35,4 +36,13 @@ export interface SacramentMeeting {
   speakers: SpeakerItem[];
   closingHymn: Hymn;
   closingPrayer: string;
+}
+
+export interface MeetingsPageResult {
+  meetings: SacramentMeeting[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
 }

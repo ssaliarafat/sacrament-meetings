@@ -1,12 +1,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { getMeetings } from "@/lib/meetings-db";
 import MeetingCard from "@/components/MeetingCard";
+import { getMeetingsPage, isDatabaseConfigured } from "@/lib/meetings-db";
 
-export default function HomePage() {
-  const meetings = getMeetings();
-  const latestMeeting = meetings[0];
+export default async function HomePage() {
+  const latestMeeting = isDatabaseConfigured()
+    ? (await getMeetingsPage({ page: 1, limit: 1 })).meetings[0]
+    : undefined;
 
   return (
     <div className="space-y-12">
@@ -68,7 +69,13 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <MeetingCard meeting={latestMeeting} />
+        {latestMeeting ? (
+          <MeetingCard meeting={latestMeeting} />
+        ) : (
+          <p className="rounded-xl bg-white p-8 text-center text-slate-600">
+            No meeting programs are available.
+          </p>
+        )}
       </section>
     </div>
   );
