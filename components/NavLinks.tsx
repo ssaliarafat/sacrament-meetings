@@ -8,6 +8,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/meetings", label: "All Meetings" },
   { href: "/meetings/current", label: "This Sunday" },
+  { href: "/meetings/new", label: "Create Meeting" },
 ];
 
 export default function NavLinks() {

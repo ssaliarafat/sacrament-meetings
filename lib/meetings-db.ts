@@ -536,3 +536,91 @@ export async function getMeetingsPage({
     hasNextPage: currentPage < totalPages,
   };
 }
+
+export async function createMeetingInDatabase(
+  meeting: Omit<SacramentMeeting, "id">,
+): Promise<SacramentMeeting> {
+  await initializeDatabase();
+
+  const rows = (await getSqlClient()`
+    INSERT INTO meetings (
+      date,
+      meeting_type,
+      presiding,
+      conducting,
+      announcements,
+      opening_hymn,
+      opening_prayer,
+      ward_business,
+      stake_business,
+      sacrament_hymn,
+      speakers,
+      closing_hymn,
+      closing_prayer
+    ) VALUES (
+      ${meeting.date},
+      ${meeting.meetingType},
+      ${meeting.presiding},
+      ${meeting.conducting},
+      ${meeting.announcements},
+      ${JSON.stringify(meeting.openingHymn)},
+      ${meeting.openingPrayer},
+      ${JSON.stringify(meeting.wardBusiness)},
+      ${meeting.stakeBusiness},
+      ${JSON.stringify(meeting.sacramentHymn)},
+      ${JSON.stringify(meeting.speakers)},
+      ${JSON.stringify(meeting.closingHymn)},
+      ${meeting.closingPrayer}
+    )
+    RETURNING *;
+  `) as DatabaseMeetingRow[];
+
+  if (!rows[0]) {
+    throw new Error("The meeting could not be created.");
+  }
+
+  return normalizeMeeting(rows[0]);
+}
+
+export async function updateMeetingInDatabase(
+  id: number,
+  meeting: Omit<SacramentMeeting, "id">,
+): Promise<SacramentMeeting | undefined> {
+  await initializeDatabase();
+
+  const rows = (await getSqlClient()`
+    UPDATE meetings
+    SET
+      date = ${meeting.date},
+      meeting_type = ${meeting.meetingType},
+      presiding = ${meeting.presiding},
+      conducting = ${meeting.conducting},
+      announcements = ${meeting.announcements},
+      opening_hymn = ${JSON.stringify(meeting.openingHymn)},
+      opening_prayer = ${meeting.openingPrayer},
+      ward_business = ${JSON.stringify(meeting.wardBusiness)},
+      stake_business = ${meeting.stakeBusiness},
+      sacrament_hymn = ${JSON.stringify(meeting.sacramentHymn)},
+      speakers = ${JSON.stringify(meeting.speakers)},
+      closing_hymn = ${JSON.stringify(meeting.closingHymn)},
+      closing_prayer = ${meeting.closingPrayer}
+    WHERE id = ${id}
+    RETURNING *;
+  `) as DatabaseMeetingRow[];
+
+  return rows[0] ? normalizeMeeting(rows[0]) : undefined;
+}
+
+export async function deleteMeetingFromDatabase(
+  id: number,
+): Promise<boolean> {
+  await initializeDatabase();
+
+  const rows = (await getSqlClient()`
+    DELETE FROM meetings
+    WHERE id = ${id}
+    RETURNING id;
+  `) as Array<{ id: number }>;
+
+  return Boolean(rows[0]);
+}

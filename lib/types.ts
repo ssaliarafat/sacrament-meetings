@@ -46,3 +46,9 @@ export interface MeetingsPageResult {
   hasPreviousPage: boolean;
   hasNextPage: boolean;
 }
+
+export interface MeetingActionState {
+  success: boolean;
+  message: string;
+  errors: Partial<Record<string, string[]>>;
+}

@@ -1,6 +1,8 @@
 
 import type { SacramentMeeting } from "@/lib/types";
 import PrintButton from "@/components/PrintButton";
+import Link from "next/link";
+import DeleteMeetingButton from "@/components/DeleteMeetingButton";
 
 interface MeetingDetailProps {
   meeting: SacramentMeeting;
@@ -134,9 +136,16 @@ export default function MeetingDetail({ meeting }: MeetingDetailProps) {
         </section>
       </div>
 
-  <div className="mt-10 text-center print:hidden">
-  <PrintButton />
-</div>
+      <div className="mt-10 flex flex-wrap justify-center gap-3 print:hidden">
+        <PrintButton />
+        <Link
+          href={`/meetings/${meeting.id}/edit`}
+          className="rounded-lg border border-emerald-700 px-5 py-3 font-semibold text-emerald-800 hover:bg-emerald-50"
+        >
+          Edit meeting
+        </Link>
+        <DeleteMeetingButton meetingId={meeting.id} />
+      </div>
     </article>
   );
 }
