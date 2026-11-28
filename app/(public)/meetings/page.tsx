@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import MeetingCard from "@/components/MeetingCard";
 import MeetingSearch from "@/components/MeetingSearch";
 import { getMeetingsPage, isDatabaseConfigured } from "@/lib/meetings-db";
+
+export const metadata: Metadata = {
+  title: "All Meetings | Sacrament Meeting Planner",
+  description:
+    "Browse, search, and print current and past sacrament meeting programs for Riverside Ward.",
+};
 
 interface MeetingsPageProps {
   searchParams: Promise<{ query?: string; page?: string }>;

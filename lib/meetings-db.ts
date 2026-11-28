@@ -23,6 +23,19 @@ function getSqlClient() {
   return sqlClient;
 }
 
+export async function getUserByEmail(
+  email: string,
+): Promise<UserAccount | undefined> {
+  const rows = (await getSqlClient()`
+    SELECT id, email, name, password_hash
+    FROM users
+    WHERE email = ${email}
+    LIMIT 1;
+  `) as UserAccount[];
+
+  return rows[0];
+}
+
 interface DatabaseMeetingRow {
   id: number;
   date: string | Date;
@@ -38,6 +51,13 @@ interface DatabaseMeetingRow {
   speakers: Array<Record<string, string>> | null;
   closing_hymn: Record<string, string | number> | string;
   closing_prayer: string;
+}
+
+export interface UserAccount {
+  id: number;
+  email: string;
+  name: string;
+  password_hash: string;
 }
 
 const seedMeetings: Array<Omit<SacramentMeeting, "id">> = [

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import TodayDate from "@/components/TodayDate";
 import NavLinks from "@/components/NavLinks";
+import AuthControls from "@/components/AuthControls";
 
 export default function Header() {
   return (
@@ -15,9 +16,16 @@ export default function Header() {
               <TodayDate />
             </p>
           </div>
-         <Suspense fallback={<nav aria-label="Main navigation" className="h-10" />}>
-  <NavLinks />
-</Suspense>
+          <div className="flex flex-wrap items-center gap-3">
+            <Suspense
+              fallback={<nav aria-label="Main navigation" className="h-10" />}
+            >
+              <NavLinks />
+            </Suspense>
+            <Suspense fallback={<div className="h-10 w-24" />}>
+              <AuthControls />
+            </Suspense>
+          </div>
         </div>
       </div>
     </header>

@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { requireAuthenticatedUser } from "./auth-guard";
 import {
   createMeetingInDatabase,
   deleteMeetingFromDatabase,
@@ -235,6 +236,8 @@ export async function createMeeting(
   _previousState: MeetingActionState,
   formData: FormData,
 ): Promise<MeetingActionState> {
+  await requireAuthenticatedUser();
+
   const result = parseMeetingFormData(formData);
 
   if (!result.success) {
@@ -263,6 +266,8 @@ export async function updateMeeting(
   _previousState: MeetingActionState,
   formData: FormData,
 ): Promise<MeetingActionState> {
+  await requireAuthenticatedUser();
+
   if (!Number.isInteger(id) || id <= 0) {
     return {
       success: false,
@@ -316,6 +321,8 @@ export async function deleteMeeting(
   id: number,
   formData: FormData,
 ): Promise<void> {
+  await requireAuthenticatedUser();
+
   void formData;
 
   if (!Number.isInteger(id) || id <= 0) {
